@@ -16,6 +16,7 @@
     "test:hooks": "node --test .claude/hooks/guard.test.mjs",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run test:hooks",
     "check:full": "npm run check && npm run build",
+    "check:env": "tsx --env-file-if-exists=.env.local --conditions=react-server scripts/check-env.ts",
     "prepare": "husky"
   },
   "dependencies": {
