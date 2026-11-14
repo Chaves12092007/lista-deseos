@@ -33,7 +33,7 @@ Las rutas y servicios de cualquier feature pueden lanzar errores de dominio que 
 
 ### Validación del origen
 
-6. En peticiones `POST`, `PUT`, `PATCH` y `DELETE`, si el header `Origin` falta o su host no es igual al host de la petición, la respuesta es 403 `FORBIDDEN` y no se ejecuta el servicio.
+6. En peticiones `POST`, `PUT`, `PATCH` y `DELETE`, si el header `Origin` falta o su origen (esquema, host y puerto) no es igual al origen de la petición, la respuesta es 403 `FORBIDDEN` y no se ejecuta el servicio.
 7. `GET`, `HEAD` y `OPTIONS` no se revisan.
 
 ### Sesión (cookie de Firebase)
@@ -44,7 +44,7 @@ Las rutas y servicios de cualquier feature pueden lanzar errores de dominio que 
    - exige que el token se haya emitido (`auth_time`) hace **5 minutos o menos**; si no, lanza `UnauthenticatedError`;
    - crea la cookie de sesión de Firebase con duración de **5 días** y la guarda en la cookie `session`.
 10. La cookie `session` lleva `HttpOnly`, `SameSite=Lax`, `Path=/`, `Max-Age=432000` (5 días) y `Secure` solo cuando `NODE_ENV` es `production`.
-11. `getSession()` devuelve `{ uid, email }` si la cookie existe y `verifySessionCookie(cookie, checkRevoked = true)` la acepta. Si falta, es inválida, venció o fue revocada, devuelve `null`. Nunca lanza por una cookie mala.
+11. `getSession()` devuelve `{ uid, email }` si la cookie existe y `verifySessionCookie(cookie, checkRevoked = true)` la acepta. Si falta, es inválida, venció o fue revocada, o el usuario está deshabilitado, devuelve `null`. Nunca lanza por una cookie mala. Cualquier otro error (entorno inválido, red, caída de Firebase) **no** se convierte en `null`: se propaga y termina en 500 `INTERNAL`. Lo mismo en `createSession`: solo un token rechazado por Firebase Auth se vuelve `UnauthenticatedError`.
 12. `requireSession()` devuelve lo mismo que `getSession()`; si no hay sesión, lanza `UnauthenticatedError` (→ 401).
 13. `clearSession()` borra la cookie `session` (`Max-Age=0`).
 14. El `uid` de la persona sale **solo** de la sesión verificada, nunca del cuerpo, la URL ni los headers que mande el navegador.
@@ -63,9 +63,11 @@ Las rutas y servicios de cualquier feature pueden lanzar errores de dominio que 
 
     `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`, `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` y `NEXT_PUBLIC_FIREBASE_APP_ID` quedan como «no aplica».
 
+    Si la variable `VERCEL` está definida y no vacía, el modo emulador es un error de coherencia: en Vercel nunca se usa el emulador (con él, Firebase Admin acepta tokens sin firma).
+
 19. En modo producción son obligatorias:
     - `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL` y `FIREBASE_PRIVATE_KEY`;
-    - las cuatro `NEXT_PUBLIC_FIREBASE_*`;
+    - las cuatro `NEXT_PUBLIC_FIREBASE_*`, con `NEXT_PUBLIC_FIREBASE_PROJECT_ID` igual a `FIREBASE_PROJECT_ID`;
     - `NEXT_PUBLIC_USE_FIREBASE_EMULATORS` sin definir o igual a `"false"`.
 
     `FIRESTORE_EMULATOR_HOST` debe estar sin definir.
@@ -93,7 +95,7 @@ Las rutas y servicios de cualquier feature pueden lanzar errores de dominio que 
 
 30. La sesión recibe por inyección un puerto `SessionVerifier` (`verifyIdToken`, `createSessionCookie`, `verifySessionCookie`) y un puerto `CookieJar` (`get`, `set`, `delete`). Las pruebas usan dobles en memoria de ambos.
 31. La validación del entorno es una función pura que recibe el objeto de variables (no lee `process.env` directamente), para probarla con objetos de prueba.
-32. Un setup de Vitest reemplaza `fetch` y `net.connect` para que lancen «Red prohibida en pruebas». `npm test` no levanta el emulador ni abre sockets.
+32. Un setup de Vitest reemplaza `fetch`, `net.connect`, `net.createConnection`, `net.Socket.prototype.connect` y `tls.connect` para que lancen «Red prohibida en pruebas» (así quedan cubiertos también `http`, `https` y `http2`). `npm test` no levanta el emulador ni abre sockets.
 33. La cobertura de `app/shared/server/**` es ≥ 80 % (ya la exige `vitest.config.mts`).
 
 ## Entradas y salidas
@@ -142,6 +144,12 @@ Errores esperados:
 - **Dado** un ID token que el verificador rechaza **cuando** se llama `createSession` **entonces** lanza `UnauthenticatedError`.
 - **Dado** una cookie válida **cuando** se llama `getSession()` **entonces** devuelve `{ uid, email }`, y el verificador recibió `checkRevoked = true`.
 - **Dado** una cookie revocada, vencida o alterada **cuando** se llama `getSession()` **entonces** devuelve `null`.
+- **Dado** un verificador que falla por algo que no es la cookie (por ejemplo, entorno inválido o red) **cuando** se llama `getSession()` **entonces** el error se propaga (no devuelve `null`).
+- **Dado** un ID token sin `auth_time` válido **cuando** se llama `createSession` **entonces** lanza `UnauthenticatedError` y no se guarda la cookie.
+- **Dado** un `POST` con `Origin: http://app.com` y petición a `https://app.com` **cuando** se valida **entonces** responde 403.
+- **Dado** el modo emulador con `VERCEL=1` **cuando** se valida **entonces** hay un error de coherencia.
+- **Dado** el modo producción con `NEXT_PUBLIC_FIREBASE_PROJECT_ID` distinto de `FIREBASE_PROJECT_ID` **cuando** se valida **entonces** hay un error de coherencia.
+- **Dado** el entorno de pruebas **cuando** una prueba llama a `net.connect`, `new net.Socket().connect`, `tls.connect` o `https.get` **entonces** lanza «Red prohibida en pruebas».
 - **Dado** que no hay cookie **cuando** se llama `requireSession()` **entonces** lanza `UnauthenticatedError`.
 - **Dado** una sesión **cuando** se llama `clearSession()` **entonces** la cookie `session` se borra.
 - **Dado** el modo emulador con todas sus variables correctas **cuando** se valida **entonces** el resultado es válido y `FIREBASE_PRIVATE_KEY` figura como «no aplica».
@@ -197,5 +205,12 @@ Todas respondidas por la persona el 2026-11-13:
 15. Variables del navegador en modo emulador → `API_KEY` y `PROJECT_ID`; `AUTH_DOMAIN` y `APP_ID` quedan como «no aplica».
 16. Pruebas → puertos con dobles en memoria; red bloqueada en Vitest; sin emulador en `npm test`.
 17. Cliente del navegador → F0 lo inicializa (solo Auth), sin pantallas.
+
+Cambios tras la revisión de `security`, decididos por la persona el 2026-11-13:
+
+18. Sesión → solo una cookie o token rechazado por Firebase Auth da `null`/401; los demás errores se propagan (regla 11).
+19. Origen → se compara el origen completo (esquema, host y puerto), no solo el host (regla 6).
+20. Emulador en Vercel → error de coherencia si `VERCEL` está definida (regla 18).
+21. Proyecto en producción → `NEXT_PUBLIC_FIREBASE_PROJECT_ID` igual a `FIREBASE_PROJECT_ID` también en producción (regla 19).
 
 Decisiones que tomé yo (sin preguntar) y que debes revisar: la regla 4 (`ZodError` → 400), el `code` en mayúsculas de cada clase, la clave `_` para errores sin campo, `email: string | null` en la sesión y que `FIRESTORE_EMULATOR_HOST` sea un error en producción.
