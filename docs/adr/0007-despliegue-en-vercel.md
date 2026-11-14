@@ -14,7 +14,7 @@ La aplicación se publica en Vercel (plan Hobby, uso no comercial) desde la rama
 - **`jose` v4 (CommonJS) solo para `jwks-rsa`**, con un `overrides` de npm: `"overrides": { "jwks-rsa": { "jose": "^4.15.9" } }`. Otro override fija `"@grpc/grpc-js": "^1.14.6"` (vulnerabilidades del cliente de Firestore).
 - **Comprobación local equivalente a Vercel:** `NODE_OPTIONS=--no-experimental-require-module npx next start` tras `npm run build`. Si una ruta que use Firebase responde 200 así, el despliegue no fallará por esto.
 - **Scripts de Node fuera de Next:** se ejecutan con `tsx --conditions=react-server`, porque importan módulos con `import "server-only"`.
-- **Variables de entorno:** las de `.env.example` se crean también en _Settings → Environment Variables_ de Vercel, marcadas para Production; las `NEXT_PUBLIC_*` se leen al compilar, así que un cambio exige volver a desplegar. `FIREBASE_PRIVATE_KEY` puede llegar con comillas envolventes y con `\n` literales: hay que normalizarla antes de usarla.
+- **Variables de entorno:** las de `env.example` se crean también en _Settings → Environment Variables_ de Vercel, marcadas para Production; las `NEXT_PUBLIC_*` se leen al compilar, así que un cambio exige volver a desplegar. `FIREBASE_PRIVATE_KEY` puede llegar con comillas envolventes y con `\n` literales: hay que normalizarla antes de usarla.
 
 ## Consecuencias
 

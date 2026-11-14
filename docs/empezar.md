@@ -14,7 +14,7 @@ Se trabaja en **WSL2 con Ubuntu 24.04**: el sandbox de Claude Code no existe en 
 ```bash
 npm install
 npm run prepare           # hooks de git
-cp .env.example .env.local
+cp env.example .env.local
 npm run check             # debe quedar en verde
 ```
 

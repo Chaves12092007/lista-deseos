@@ -21,7 +21,7 @@ Reglas de uso:
 - **La identidad sale de la sesión verificada en el servidor**, nunca de lo que mande el cliente (regla 4 de `AGENTS.md`).
 - **Repositorios:** cada feature mantiene `repository.ts` (puertos asíncronos), `repository.memory.ts` (pruebas) y `repository.firestore.ts` (real). Las pruebas usan las implementaciones en memoria y no tocan la red ni el proyecto real de Firebase.
 - **Dependencias:** `firebase-admin` (servidor), `firebase` (cliente, solo Authentication).
-- **Secretos y variables:** los crea la persona en el archivo de entorno de la raíz; los agentes no lo leen ni lo crean. `.env.example` lista los nombres. La clave de la cuenta de servicio nunca se sube a git ni se pega en un documento.
+- **Secretos y variables:** los crea la persona en el archivo de entorno de la raíz; los agentes no lo leen ni lo crean. `env.example` lista los nombres. La clave de la cuenta de servicio nunca se sube a git ni se pega en un documento.
 
 ## Desarrollo sin secretos reales (actualización 2026-11-11)
 
