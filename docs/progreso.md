@@ -5,7 +5,7 @@ Lo mantiene el orquestador: se actualiza al cerrar cada feature (spec aprobada �
 ## Estado
 
 - **Construido:** F0 (versión mínima, sin seed): errores y HTTP, origen, sesión, entorno, `check:env` y clientes de Firebase. `security`: Aprobado con observaciones. Nota: `docs/handoffs/f0-base-del-proyecto.md`.
-- **Spec en curso:** ninguna.
+- **Spec en curso:** F1 + F2 + F18 · Cuentas (`docs/specs/f1-f2-f18-cuentas.md`), en Borrador.
 - **Siguiente:** F1 o F2, ver `docs/features.md`.
 
 ## Decisiones tomadas

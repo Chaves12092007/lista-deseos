@@ -47,6 +47,7 @@ Flujo: página o ruta → servicio → repositorio.
 - Cobertura de pruebas ≥ 80 % en la lógica de negocio.
 - Nombres de código en inglés; textos para el usuario en español.
 - Commits convencionales y pequeños: `feat:`, `fix:`, `test:`, `docs:`, `chore:`.
+- Todo campo que viaja entre frontend y backend (peticiones y respuestas JSON) va en `snake_case`, por ejemplo `id_token`, `password_confirmation` (ADR-0005).
 
 ## Cómo trabajamos
 
