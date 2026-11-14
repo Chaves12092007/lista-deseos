@@ -55,7 +55,7 @@
     "autoAllowBashIfSandboxed": false,
     "filesystem": {
       "denyRead": ["~/", "./.env", "./.env.local", "./data"],
-      "allowRead": ["."],
+      "allowRead": [".", "~/.nvm", "~/.gitconfig"],
       "denyWrite": ["./.claude", "./.husky", "./.git/hooks"]
     },
     "network": {

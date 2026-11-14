@@ -9,7 +9,8 @@
  * Es UNA capa más (permisos + sandbox + este hook + no tener secretos en disco): un comando con
  * comodines o variables puede esquivarlo, por eso no es la única barrera.
  */
-import { isAbsolute, relative, resolve } from "node:path";
+import { homedir } from "node:os";
+import { isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 /** Archivos y carpetas que el agente nunca toca (relativos a la raíz del proyecto). */
@@ -44,8 +45,15 @@ export function mentionsSecret(text) {
   return null;
 }
 
+/** Los planes de Claude Code viven en ~/.claude/plans: el modo plan necesita escribirlos ahí. */
+const PLANS_DIR = join(homedir(), ".claude", "plans") + sep;
+
 /** Devuelve el motivo si la ruta sale de la raíz del proyecto o entra a una carpeta prohibida. */
 export function checkPath(rawPath, root) {
+  const expanded = rawPath.replace(/^~(?=\/|$)/, homedir());
+  if (resolve(root, expanded).startsWith(PLANS_DIR)) {
+    return null;
+  }
   if (rawPath.startsWith("~")) {
     return "salir de la carpeta del proyecto (~)";
   }

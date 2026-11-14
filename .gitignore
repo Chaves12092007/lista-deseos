@@ -41,7 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 # datos locales (exportaciones del emulador) y secretos: no se suben a git
-!.env.example
 /data/
 /secrets/
 
@@ -58,3 +57,17 @@ ui-debug.log
 
 # cobertura de pruebas
 /coverage
+
+# Archivos que el sandbox de Claude Code "tapa" dentro del proyecto (aparecen vacíos)
+.bashrc
+.bash_profile
+.profile
+.zshrc
+.zprofile
+.gitconfig
+.gitmodules
+.ripgreprc
+.mcp.json
+.idea/
+.vscode/
+.claude/commands/

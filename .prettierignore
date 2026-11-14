@@ -7,3 +7,17 @@ data
 package-lock.json
 next-env.d.ts
 tsconfig.tsbuildinfo
+
+# Archivos que el sandbox de Claude Code "tapa" dentro del proyecto (aparecen vacíos)
+.bashrc
+.bash_profile
+.profile
+.zshrc
+.zprofile
+.gitconfig
+.gitmodules
+.ripgreprc
+.mcp.json
+.idea/
+.vscode/
+.claude/commands/
