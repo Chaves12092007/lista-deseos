@@ -36,6 +36,10 @@
     ],
     "allow": [
       "Read(.env.example)",
+      "Bash(npx vitest:*)",
+      "Bash(npx eslint:*)",
+      "Bash(npx prettier:*)",
+      "Bash(git add:*)",
       "Bash(npm run check:*)",
       "Bash(npm run lint:*)",
       "Bash(npm run typecheck:*)",
