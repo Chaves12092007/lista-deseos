@@ -71,3 +71,4 @@ ui-debug.log
 .idea/
 .vscode/
 .claude/commands/
+.claude/settings.local.json
