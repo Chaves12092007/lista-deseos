@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { isNullDevice, mcpServersFromFile } from "../helpers/mcp-config";
 
 const root = join(__dirname, "../..");
 const read = (file: string) => readFileSync(join(root, file), "utf8");
@@ -18,8 +19,16 @@ describe("configuración de IA", () => {
     expect(read(".claude/agents/security.md")).not.toMatch(/tools:.*(Edit|Write)/);
   });
 
-  it("no hay servidores MCP declarados", () => {
-    expect(existsSync(join(root, ".mcp.json"))).toBe(false);
+  it("no hay servidores MCP declarados (archivo ausente, vacío o sin mcpServers)", () => {
+    // En el sandbox `.mcp.json` está montado sobre /dev/null (sin permiso de lectura): solo esa excepción vale.
+    const path = join(root, ".mcp.json");
+    const exists = existsSync(path);
+    const probe = {
+      exists,
+      isNullDevice: exists && isNullDevice(path),
+      read: () => read(".mcp.json"),
+    };
+    expect(mcpServersFromFile(probe)).toEqual([]);
   });
 });
 
