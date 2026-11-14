@@ -5,7 +5,7 @@ Lo mantiene el orquestador: se actualiza al cerrar cada feature (spec aprobada �
 ## Estado
 
 - **Construido:** nada todavía.
-- **Spec en curso:** ninguna.
+- **Spec en curso:** F0 (versión mínima, sin seed), en borrador: `docs/specs/f0-base-del-proyecto.md`.
 - **Siguiente:** F0 (base del proyecto), ver `docs/features.md`.
 
 ## Decisiones tomadas
