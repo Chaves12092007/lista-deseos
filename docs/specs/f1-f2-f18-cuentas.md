@@ -127,7 +127,7 @@ Mensajes de campo (registro): «Escribe tu correo.» (vacío), «Escribe un corr
 
 ## Fuera de alcance
 
-Verificación de correo, recuperar o cambiar la contraseña (F3), perfil en Firestore, nombre visible, límites de peticiones al registrarse (además de los de Firebase), `?next`, mostrar u ocultar la contraseña, «cerrar sesión solo en este dispositivo», pantalla «Mi lista» (F19) y pruebas contra el emulador.
+Verificación de correo, recuperar o cambiar la contraseña (F3), perfil en Firestore, nombre visible, límites de peticiones al registrarse (riesgo aceptado, ver decisión 17), `?next`, mostrar u ocultar la contraseña, «cerrar sesión solo en este dispositivo», pantalla «Mi lista» (F19) y pruebas contra el emulador.
 
 ## Diseño técnico sugerido (lo detalla la interfaz del orquestador)
 
@@ -158,6 +158,10 @@ Todas respondidas por la persona el 2026-11-14:
 14. ¿Cómo es la barra? → Plegable con `<details>`/`<summary>` por debajo de `md`, y en línea desde `md:` (requisito del profe: menú plegable a 360 px).
 15. ¿Qué muestra el inicio? → Cambia según la sesión, y todas las páginas tienen pie de página.
 16. ¿Qué pasa al cerrar sesión sin una sesión válida? → 204 y se borra la cookie, sin revocar.
+
+Cambio tras la revisión de `security`, decidido por la persona el 2026-11-14:
+
+17. Límite del registro → `POST /api/accounts` no tiene límite de peticiones. Firebase Admin `createUser` no aplica el límite por IP del registro desde el navegador, así que un script puede crear cuentas sin freno y usar el 409 para averiguar qué correos existen. Se acepta como riesgo conocido y se resuelve en una tarea aparte, con su propia spec, **antes de publicar en producción**. Un límite en memoria no sirve en Vercel; las opciones son un contador en Firestore o App Check.
 
 Decisiones que tomé yo (sin preguntar) y que debes revisar antes de aprobar:
 
