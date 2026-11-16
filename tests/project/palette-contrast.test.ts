@@ -58,6 +58,33 @@ const ALLOWED_PAIRS: AllowedPair[] = [
   { foreground: "surface", background: "primary-strong", documented: 10.36, minimum: COMPONENT_MINIMUM },
 ];
 
+/** Oscuro, pares de tokens: texto sobre las superficies oscuras (fondo #0b1220, tarjetas #111a2e). */
+const DARK_TOKEN_PAIRS: Omit<AllowedPair, "documented">[] = [
+  { foreground: "ink", background: "surface", minimum: TEXT_MINIMUM },
+  { foreground: "ink", background: "surface-alt", minimum: TEXT_MINIMUM },
+  { foreground: "ink", background: "surface-strong", minimum: TEXT_MINIMUM },
+  { foreground: "ink-muted", background: "surface", minimum: TEXT_MINIMUM },
+  { foreground: "ink-muted", background: "surface-alt", minimum: TEXT_MINIMUM },
+  { foreground: "ink-muted", background: "surface-strong", minimum: TEXT_MINIMUM },
+  { foreground: "primary", background: "surface", minimum: TEXT_MINIMUM },
+  { foreground: "primary", background: "surface-alt", minimum: TEXT_MINIMUM },
+  { foreground: "primary-strong", background: "surface", minimum: TEXT_MINIMUM },
+  { foreground: "primary-strong", background: "surface-alt", minimum: TEXT_MINIMUM },
+  { foreground: "danger", background: "surface", minimum: TEXT_MINIMUM },
+  { foreground: "success", background: "surface", minimum: TEXT_MINIMUM },
+  { foreground: "warning", background: "surface", minimum: TEXT_MINIMUM },
+  { foreground: "control-border", background: "surface", minimum: COMPONENT_MINIMUM },
+  { foreground: "control-border", background: "surface-alt", minimum: COMPONENT_MINIMUM },
+];
+
+/** Oscuro, superficies de color fijo de globals.css: barra y portada, pie, botón principal (texto blanco). */
+const DARK_FIXED_PAIRS: { name: string; foreground: string; background: string; minimum: number }[] = [
+  { name: "barra y portada", foreground: "#ffffff", background: "#1e3a8a", minimum: TEXT_MINIMUM },
+  { name: "pie", foreground: "#ffffff", background: "#172554", minimum: TEXT_MINIMUM },
+  { name: "botón principal", foreground: "#ffffff", background: "#2563eb", minimum: TEXT_MINIMUM },
+  { name: "botón principal (hover)", foreground: "#ffffff", background: "#1d4ed8", minimum: TEXT_MINIMUM },
+];
+
 /** Bloque del modo oscuro: desde su `@media` hasta la siguiente capa (`@layer base`). */
 const DARK_BLOCK_PATTERN = /@media \(prefers-color-scheme: dark\)[\s\S]*?(?=@layer base)/;
 const darkBlock = DARK_BLOCK_PATTERN.exec(css)?.[0] ?? "";
@@ -124,10 +151,24 @@ describe("Paleta · modo oscuro: los mismos 14 tokens con valores oscuros", () =
     expect(colorOf(token, darkColors)).not.toBe(colorOf(token));
   });
 
-  it.each(ALLOWED_PAIRS)(
+  it.each(DARK_TOKEN_PAIRS)(
     "oscuro: $foreground sobre $background cumple el mínimo de $minimum:1",
     ({ foreground, background, minimum }) => {
       expect(contrastOfTokens(foreground, background, darkColors)).toBeGreaterThanOrEqual(minimum);
+    },
+  );
+
+  it.each(DARK_FIXED_PAIRS)(
+    "oscuro: $name ($foreground sobre $background) cumple el mínimo de $minimum:1",
+    ({ foreground, background, minimum }) => {
+      expect(contrastRatio(foreground, background)).toBeGreaterThanOrEqual(minimum);
+    },
+  );
+
+  it.each(DARK_FIXED_PAIRS.flatMap(({ foreground, background }) => [foreground, background]))(
+    "oscuro: el CSS define el color fijo %s",
+    (hex) => {
+      expect(css.toLowerCase()).toContain(hex.toLowerCase());
     },
   );
 

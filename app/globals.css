@@ -32,14 +32,14 @@
   :root {
     color-scheme: dark;
     --color-surface: #0b1220;
-    --color-surface-alt: #111b30;
+    --color-surface-alt: #111a2e;
     --color-surface-strong: #1e293b;
     --color-ink: #e2e8f0;
-    --color-ink-muted: #a9b6c9;
+    --color-ink-muted: #cbd5e1;
     --color-primary: #93c5fd;
     --color-primary-hover: #dbeafe;
-    --color-primary-strong: #bfdbfe;
-    --color-primary-deep: #9dbcf0;
+    --color-primary-strong: #93c5fd;
+    --color-primary-deep: #1e3a8a;
     --color-line: #1e3a8a;
     --color-control-border: #8294ae;
     --color-danger: #fca5a5;
@@ -120,6 +120,52 @@
   .skip-link:focus {
     transform: translateY(0);
     outline-color: var(--color-primary);
+  }
+}
+
+/*
+ * Modo oscuro: barra, portada y pie en azul marino con texto blanco, y botón principal en #2563eb con texto
+ * blanco. Los tokens (`primary*`) pasan a azules claros para enlaces y títulos, así que estas superficies llevan
+ * sus colores fijos; van fuera de las capas para ganarle a las utilidades de Tailwind. Contrastes verificados en
+ * tests/project/palette-contrast.test.ts.
+ */
+@media (prefers-color-scheme: dark) {
+  .bg-primary-strong {
+    background-color: #1e3a8a;
+  }
+
+  .bg-primary-deep {
+    background-color: #172554;
+  }
+
+  .bg-primary {
+    background-color: #2563eb;
+  }
+
+  .bg-primary-strong,
+  .bg-primary-deep,
+  .bg-primary,
+  :is(.bg-primary-strong, .bg-primary-deep) :is(a, summary, button, nav) {
+    color: #ffffff;
+  }
+
+  .bg-primary:hover,
+  .bg-primary:disabled {
+    background-color: #1d4ed8;
+  }
+
+  .hover\:bg-primary-hover:hover {
+    background-color: #2563eb;
+  }
+
+  .bg-primary-strong.border-surface,
+  :is(.bg-primary-strong, .bg-primary-deep) .border-surface {
+    border-color: #ffffff;
+  }
+
+  header :focus-visible,
+  footer :focus-visible {
+    outline-color: #ffffff;
   }
 }
 
