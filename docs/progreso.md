@@ -6,8 +6,9 @@ Lo mantiene el orquestador: se actualiza al cerrar cada feature (spec aprobada �
 
 - **Construido:** F0 (versión mínima, sin seed): errores y HTTP, origen, sesión, entorno, `check:env` y clientes de Firebase. `security`: Aprobado con observaciones. Nota: `docs/handoffs/f0-base-del-proyecto.md`.
 - **Construido:** F1 + F2 + F18 · Cuentas: registro, ingreso y cierre de sesión, barra y pantallas base. `security`: Aprobado con observaciones (una ronda). Nota: `docs/handoffs/f1-f2-f18-cuentas.md`.
-- **Spec en curso:** F4–F9 + F19 · Mi lista (`docs/specs/f4-f9-f19-mi-lista.md`, Borrador, espera la aprobación de la persona).
-- **Siguiente:** construir Mi lista cuando la spec esté aprobada.
+- **Construido:** F4–F9 + F19 · Mi lista (agregar, ver con total, editar, eliminar, comprado, prioridad y orden). `security`: Aprobado con observaciones (una ronda; dos Bajos sin corregir). Nota: `docs/handoffs/f4-f9-f19-mi-lista.md`.
+- **Spec en curso:** ninguna.
+- **Siguiente:** revisar Mi lista en el navegador; después, la ola 2 (F13, F14, F20), ver `docs/features.md`.
 
 ## Decisiones tomadas
 

@@ -3,6 +3,7 @@
 - **Estado:** Aprobada
 - **Rol(es):** Público (registrarse, ingresar), Usuario (cerrar sesión), Todos (barra e inicio)
 - **Contrato afectado:** `app/features/accounts/schema.ts` (nuevo). `app/shared/schema.ts` no cambia.
+- **Nota (2026-11-16):** la spec de Mi lista (`docs/specs/f4-f9-f19-mi-lista.md`, reglas 39 a 42) cambia los destinos de las reglas 9, 12, 24 y 26: tras ingresar o registrarse, y al abrir `/registro` o `/ingresar` con sesión, se va a `/mi-lista`; la barra suma «Mi lista»; el inicio con sesión enlaza «Ver mi lista».
 
 ## Objetivo
 
