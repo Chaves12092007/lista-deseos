@@ -46,7 +46,7 @@ export function RegisterForm() {
       router.push(ACCOUNT_CREATED_LOGIN_PATH);
       return;
     }
-    router.push("/");
+    router.push("/mi-lista");
     router.refresh();
   }
 

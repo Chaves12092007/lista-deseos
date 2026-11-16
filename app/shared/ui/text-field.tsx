@@ -11,6 +11,8 @@ interface TextFieldProps {
   autoComplete: string;
   error: string | undefined;
   className?: string;
+  defaultValue?: string;
+  inputMode?: "numeric";
 }
 
 function describedBy(error: string | undefined, errorId: string): string | undefined {
@@ -31,7 +33,8 @@ function FieldError({ id, message }: { id: string; message: string | undefined }
   );
 }
 
-export function TextField({ id, name, label, type, autoComplete, error, className = "" }: TextFieldProps) {
+export function TextField(props: TextFieldProps) {
+  const { id, name, label, type, autoComplete, error, className = "", defaultValue, inputMode } = props;
   const errorId = `${id}-error`;
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
@@ -43,6 +46,8 @@ export function TextField({ id, name, label, type, autoComplete, error, classNam
         name={name}
         type={type}
         autoComplete={autoComplete}
+        defaultValue={defaultValue}
+        inputMode={inputMode}
         required
         aria-invalid={error !== undefined}
         aria-describedby={describedBy(error, errorId)}

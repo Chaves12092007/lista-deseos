@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PRIMARY_BUTTON_CLASS, SECONDARY_BUTTON_CLASS } from "@/shared/ui/styles";
 
-/** Bloque del inicio que cambia con la sesión (F18, regla 24). Recibe el correo por props. */
+/** Bloque del inicio que cambia con la sesión (F18, regla 24; con sesión, regla 42 de Mi lista). Recibe el correo por props. */
 export function HomeWelcome({ email }: { email: string | null }) {
   if (email === null) {
     return (
@@ -29,7 +29,11 @@ export function HomeWelcome({ email }: { email: string | null }) {
       <h2 id="bienvenida" className="text-2xl font-bold break-all text-primary-strong">
         Hola, {email}
       </h2>
-      <p className="mt-2 text-ink-muted">Pronto podrás agregar tus deseos aquí.</p>
+      <p className="mt-4">
+        <Link href="/mi-lista" className={PRIMARY_BUTTON_CLASS}>
+          Ver mi lista
+        </Link>
+      </p>
     </section>
   );
 }

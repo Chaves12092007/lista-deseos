@@ -42,7 +42,7 @@ export function LoginForm() {
       setState({ pending: false, fields: {}, message: result.message });
       return;
     }
-    router.push("/");
+    router.push("/mi-lista");
     router.refresh();
   }
 

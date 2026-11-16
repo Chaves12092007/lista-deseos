@@ -40,6 +40,11 @@ function NavItems({ email, className }: { email: string | null; className: strin
   }
   return (
     <ul className={className}>
+      <li>
+        <Link href="/mi-lista" className={NAV_LINK_CLASS}>
+          Mi lista
+        </Link>
+      </li>
       <li className="px-2 break-all">{email}</li>
       <li>
         <SignOutButton />
