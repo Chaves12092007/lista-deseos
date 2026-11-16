@@ -80,6 +80,7 @@ const DARK_TOKEN_PAIRS: Omit<AllowedPair, "documented">[] = [
 /** Oscuro, superficies de color fijo de globals.css: barra y portada, pie, botón principal (texto blanco). */
 const DARK_FIXED_PAIRS: { name: string; foreground: string; background: string; minimum: number }[] = [
   { name: "barra y portada", foreground: "#ffffff", background: "#1e3a8a", minimum: TEXT_MINIMUM },
+  { name: "correo en la barra", foreground: "#ffffff", background: "#1e3a8a", minimum: TEXT_MINIMUM },
   { name: "pie", foreground: "#ffffff", background: "#172554", minimum: TEXT_MINIMUM },
   { name: "botón principal", foreground: "#ffffff", background: "#2563eb", minimum: TEXT_MINIMUM },
   { name: "botón principal (hover)", foreground: "#ffffff", background: "#1d4ed8", minimum: TEXT_MINIMUM },
@@ -171,6 +172,14 @@ describe("Paleta · modo oscuro: los mismos 14 tokens con valores oscuros", () =
       expect(css.toLowerCase()).toContain(hex.toLowerCase());
     },
   );
+
+  it("oscuro: la regla de texto blanco de la barra incluye el <li> del correo", () => {
+    expect(css).toMatch(/:is\(\.bg-primary-strong, \.bg-primary-deep\) :is\([^)]*\bli\b[^)]*\)/);
+  });
+
+  it("claro: el correo en la barra (surface sobre primary-strong) cumple el mínimo de 4,5:1", () => {
+    expect(contrastOfTokens("surface", "primary-strong")).toBeGreaterThanOrEqual(TEXT_MINIMUM);
+  });
 
   it("oscuro: las combinaciones prohibidas siguen sin llegar al mínimo", () => {
     expect(contrastOfTokens("primary", "primary-strong", darkColors)).toBeLessThan(TEXT_MINIMUM);

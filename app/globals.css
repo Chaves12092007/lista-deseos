@@ -145,7 +145,7 @@
   .bg-primary-strong,
   .bg-primary-deep,
   .bg-primary,
-  :is(.bg-primary-strong, .bg-primary-deep) :is(a, summary, button, nav) {
+  :is(.bg-primary-strong, .bg-primary-deep) :is(a, summary, button, nav, li) {
     color: #ffffff;
   }
 

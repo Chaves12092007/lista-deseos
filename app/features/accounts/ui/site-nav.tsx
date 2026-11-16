@@ -45,7 +45,7 @@ function NavItems({ email, className }: { email: string | null; className: strin
           Mi lista
         </Link>
       </li>
-      <li className="px-2 break-all">{email}</li>
+      <li className="px-2 break-all text-surface">{email}</li>
       <li>
         <SignOutButton />
       </li>
