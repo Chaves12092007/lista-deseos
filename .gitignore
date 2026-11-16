@@ -72,3 +72,7 @@ ui-debug.log
 .vscode/
 .claude/commands/
 .claude/settings.local.json
+
+# Resultados de Playwright
+test-results/
+playwright-report/

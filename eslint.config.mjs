@@ -182,7 +182,13 @@ const eslintConfig = defineConfig([
   },
   // En las pruebas, `describe(...)` agrupa casos: su callback es una suite, no lógica.
   {
-    files: ["tests/**/*.ts", "app/features/*/tests/**/*.ts", "app/shared/tests/**/*.ts", "**/*.test.mjs"],
+    files: [
+      "tests/**/*.ts",
+      "tests/e2e/**/*.ts",
+      "app/features/*/tests/**/*.ts",
+      "app/shared/tests/**/*.ts",
+      "**/*.test.mjs",
+    ],
     rules: { "max-lines-per-function": "off" },
   },
   globalIgnores([".next/**", "out/**", "build/**", "coverage/**", "data/**", "next-env.d.ts"]),

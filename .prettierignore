@@ -21,3 +21,7 @@ tsconfig.tsbuildinfo
 .idea/
 .vscode/
 .claude/commands/
+
+# Resultados de Playwright
+test-results/
+playwright-report/

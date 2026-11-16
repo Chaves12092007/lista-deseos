@@ -15,6 +15,8 @@ export default defineConfig({
     // Punto de entrada único (`npm test`): los tests de cada feature viven en su carpeta
     // y `tests/` aporta los del proyecto y los ayudantes compartidos (`tests/helpers`).
     include: ["tests/**/*.test.ts", "app/features/*/tests/**/*.test.ts", "app/shared/tests/**/*.test.ts"],
+    // Las pruebas e2e (Playwright) se corren aparte con `npm run test:e2e`.
+    exclude: ["**/node_modules/**", "tests/e2e/**"],
     environment: "node",
     // Pruebas sin red (F0, regla 32): `fetch` y `net.connect` lanzan «Red prohibida en pruebas».
     setupFiles: ["tests/setup/no-network.ts"],
@@ -23,7 +25,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       include: ["app/features/*/server/**/*.ts", "app/shared/server/**/*.ts", "app/features/*/schema.ts"],
-      exclude: ["**/*.test.ts", "**/repository.firestore.ts"],
+      exclude: ["**/*.test.ts", "**/repository.firestore.ts", "tests/e2e/**"],
       reporter: ["text", "html"],
       thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
     },
