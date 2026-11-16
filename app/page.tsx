@@ -1,3 +1,6 @@
+import { Suspense } from "react";
+import { HomeSession } from "./_components/home-session";
+
 interface Area {
   title: string;
   text: string;
@@ -23,6 +26,10 @@ export default function HomePage() {
           todo.
         </p>
       </header>
+
+      <Suspense fallback={<div aria-hidden="true" className="mt-10 min-h-24" />}>
+        <HomeSession />
+      </Suspense>
 
       <section aria-labelledby="areas" className="mt-10">
         <h2 id="areas" className="text-2xl font-bold text-primary-strong">

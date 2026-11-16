@@ -45,7 +45,9 @@
 
   a {
     color: var(--color-primary);
-    text-decoration: none;
+    /* Enlaces distinguibles sin depender solo del color (WCAG 1.4.1). */
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   a:hover {
