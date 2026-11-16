@@ -65,3 +65,14 @@ export function assertSameOrigin(request: Request): void {
     throw new ForbiddenError();
   }
 }
+
+/**
+ * Para `request.json().catch(rejectInvalidJson)`: un cuerpo que no es JSON se vuelve un 400 `VALIDATION` «Revisa
+ * los datos enviados.» sin `fields`. Cualquier otro error se relanza como el mismo objeto.
+ */
+export function rejectInvalidJson<T>(error: T): never {
+  if (error instanceof SyntaxError) {
+    throw new ValidationError(VALIDATION_MESSAGE);
+  }
+  throw error;
+}

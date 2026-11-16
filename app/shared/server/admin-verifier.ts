@@ -41,15 +41,23 @@ function decodesToJsonObject(part: string): boolean {
 }
 
 /**
- * Forma de JWT (regla 11, hallazgo R1): 3 partes base64url no vacías y cabecera y payload que decodifican a un
+ * Forma de JWT (regla 11, hallazgo R1): 3 partes; cabecera y payload base64url no vacías que decodifican a un
  * objeto JSON. Con otra forma el SDK lanza `SyntaxError`/`TypeError` en vez de `FirebaseAuthError`.
+ * La firma puede estar vacía: el Auth Emulator emite tokens sin firmar (`alg: "none"`, `cabecera.payload.`).
+ * En producción el SDK los rechaza con `FirebaseAuthError` (credencial rechazada), así que no abre nada.
  */
 export function hasJwtShape(token: string): boolean {
   const parts = token.split(".");
-  if (parts.length !== 3 || !parts.every((part) => BASE64URL_PART.test(part))) {
+  if (parts.length !== 3) {
     return false;
   }
-  const [header = "", payload = ""] = parts;
+  const [header = "", payload = "", signature = ""] = parts;
+  if (!BASE64URL_PART.test(header) || !BASE64URL_PART.test(payload)) {
+    return false;
+  }
+  if (signature !== "" && !BASE64URL_PART.test(signature)) {
+    return false;
+  }
   return decodesToJsonObject(header) && decodesToJsonObject(payload);
 }
 

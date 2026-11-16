@@ -1,5 +1,6 @@
 import "server-only";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { createAdminVerifier } from "./admin-verifier";
 import { getAdminAuth } from "./firebase-admin";
 import { createSessionManager, sessionCookieOptions } from "./session";
@@ -13,6 +14,8 @@ import type { CookieJar, Session, SessionManager } from "./session";
 const verifier = createAdminVerifier(getAdminAuth);
 
 async function sessionManager(): Promise<SessionManager> {
+  // Marca la lectura como de tiempo de petición: el SDK de Firebase usa Date.now() al verificar (Cache Components).
+  await connection();
   const store = await cookies();
   const isProduction = process.env.NODE_ENV === "production";
   const jar: CookieJar = {
