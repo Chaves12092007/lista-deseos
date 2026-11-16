@@ -58,6 +58,11 @@ const ALLOWED_PAIRS: AllowedPair[] = [
   { foreground: "surface", background: "primary-strong", documented: 10.36, minimum: COMPONENT_MINIMUM },
 ];
 
+/** Bloque del modo oscuro: desde su `@media` hasta la siguiente capa (`@layer base`). */
+const DARK_BLOCK_PATTERN = /@media \(prefers-color-scheme: dark\)[\s\S]*?(?=@layer base)/;
+const darkBlock = DARK_BLOCK_PATTERN.exec(css)?.[0] ?? "";
+const lightCss = css.replace(DARK_BLOCK_PATTERN, "");
+
 /** Lee todas las declaraciones `--color-<nombre>: <valor>;` del CSS,. */
 function readColorDeclarations(source: string): Map<string, string> {
   const declarations = new Map<string, string>();
@@ -70,19 +75,24 @@ function readColorDeclarations(source: string): Map<string, string> {
   return declarations;
 }
 
-const declaredColors = readColorDeclarations(css);
+const declaredColors = readColorDeclarations(lightCss);
+const darkColors = readColorDeclarations(darkBlock);
 
 /** Valor hexadecimal de un token; falla con un mensaje claro si falta o no es un hexadecimal. */
-function colorOf(token: string): string {
-  const value = declaredColors.get(token);
+function colorOf(token: string, colors: Map<string, string> = declaredColors): string {
+  const value = colors.get(token);
   if (value === undefined || !/^#[0-9a-f]{6}$/i.test(value)) {
     throw new Error(`El token --color-${token} no está definido como #RRGGBB en globals.css (valor: ${String(value)})`);
   }
   return value;
 }
 
-function contrastOfTokens(foreground: string, background: string): number {
-  return contrastRatio(colorOf(foreground), colorOf(background));
+function contrastOfTokens(
+  foreground: string,
+  background: string,
+  colors: Map<string, string> = declaredColors,
+): number {
+  return contrastRatio(colorOf(foreground, colors), colorOf(background, colors));
 }
 
 describe("Paleta · los tokens de color de globals.css son exactamente los documentados", () => {
@@ -100,8 +110,44 @@ describe("Paleta · los tokens de color de globals.css son exactamente los docum
     expect(css).toMatch(/--color-\*\s*:\s*initial\s*;/);
   });
 
-  it("elimina el modo oscuro de la plantilla", () => {
-    expect(css).not.toMatch(/prefers-color-scheme\s*:\s*dark/);
+  it("define el modo oscuro con prefers-color-scheme: dark", () => {
+    expect(darkBlock).not.toBe("");
+  });
+});
+
+describe("Paleta · modo oscuro: los mismos 14 tokens con valores oscuros", () => {
+  it("redefine exactamente los mismos tokens que el modo claro", () => {
+    expect([...darkColors.keys()].sort()).toEqual(Object.keys(DOCUMENTED_PALETTE).sort());
+  });
+
+  it.each(Object.keys(DOCUMENTED_PALETTE))("--color-%s tiene un valor #RRGGBB propio en oscuro", (token) => {
+    expect(colorOf(token, darkColors)).not.toBe(colorOf(token));
+  });
+
+  it.each(ALLOWED_PAIRS)(
+    "oscuro: $foreground sobre $background cumple el mínimo de $minimum:1",
+    ({ foreground, background, minimum }) => {
+      expect(contrastOfTokens(foreground, background, darkColors)).toBeGreaterThanOrEqual(minimum);
+    },
+  );
+
+  it("oscuro: las combinaciones prohibidas siguen sin llegar al mínimo", () => {
+    expect(contrastOfTokens("primary", "primary-strong", darkColors)).toBeLessThan(TEXT_MINIMUM);
+    expect(contrastOfTokens("ink-muted", "primary-strong", darkColors)).toBeLessThan(TEXT_MINIMUM);
+    expect(contrastOfTokens("line", "surface", darkColors)).toBeLessThan(COMPONENT_MINIMUM);
+  });
+});
+
+describe("Movimiento e impresión · reglas del CSS", () => {
+  it("respeta prefers-reduced-motion", () => {
+    expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)/);
+  });
+
+  it("define @media print que oculta barra, botones y formularios", () => {
+    const printBlock = /@media print[\s\S]*$/.exec(css)?.[0] ?? "";
+    expect(printBlock).toMatch(/body > header/);
+    expect(printBlock).toMatch(/\bform\b/);
+    expect(printBlock).toMatch(/\bbutton\b/);
   });
 });
 

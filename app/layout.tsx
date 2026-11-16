@@ -1,13 +1,22 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { SiteNavFallback } from "@/features/accounts/ui/site-nav";
+import { SITE_DESCRIPTION, SITE_NAME, getSiteUrl } from "@/shared/seo";
 import { NavErrorBoundary } from "./_components/nav-error-boundary";
 import { SessionNav } from "./_components/session-nav";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "Lista de deseos", template: "%s · Lista de deseos" },
-  description: "Proyecto final de semestre: lista de deseos con enlaces y precios",
+  metadataBase: getSiteUrl(),
+  title: { default: SITE_NAME, template: `%s · ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    siteName: SITE_NAME,
+    locale: "es_CO",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

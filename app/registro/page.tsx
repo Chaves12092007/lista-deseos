@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { RegisterForm } from "@/features/accounts/ui/register-form";
+import { pageMetadata } from "@/shared/seo";
 import { RedirectIfSignedIn } from "../_components/redirect-if-signed-in";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Crear cuenta",
-};
+  description: "Crea tu cuenta con tu correo y una contraseña para guardar tu lista de deseos.",
+  path: "/registro",
+});
 
 export default function RegisterPage() {
   return (

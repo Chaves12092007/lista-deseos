@@ -47,7 +47,7 @@ Reglas:
 
 ## 3. Paleta (azul y blanco) y accesibilidad WCAG 2.2 AA
 
-Solo se usan estos colores, definidos una vez como tokens en `app/globals.css` (`@theme`). **Prohibidos** los colores sueltos de Tailwind (`bg-zinc-…`, `text-green-700`, `#abc` en línea). Sin modo oscuro por ahora: se elimina el `prefers-color-scheme: dark` de la plantilla, que rompería la paleta.
+Solo se usan estos colores, definidos una vez como tokens en `app/globals.css` (`@theme`). **Prohibidos** los colores sueltos de Tailwind (`bg-zinc-…`, `text-green-700`, `#abc` en línea). Hay modo oscuro con `prefers-color-scheme: dark`: `app/globals.css` redefine los mismos 14 tokens con valores oscuros (mismos nombres y roles; `surface` es el fondo oscuro, `ink` el texto claro y `primary*` azules claros). Los pares permitidos cumplen los mismos mínimos de contraste en oscuro, y `tests/project/palette-contrast.test.ts` lo comprueba. Los tokens de la tabla de abajo son los del modo claro.
 
 | Token (`--color-…`) | Valor     | Uso                                                                  |
 | ------------------- | --------- | -------------------------------------------------------------------- |

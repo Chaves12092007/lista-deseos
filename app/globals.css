@@ -23,6 +23,31 @@
   --color-warning: #92400e;
 }
 
+/*
+ * Modo oscuro: mismos nombres y mismos roles, valores oscuros. `surface` pasa a ser el fondo oscuro y `ink` el
+ * texto claro; `primary*` pasan a azules claros, así que «texto surface sobre fondo primary*» sigue siendo
+ * oscuro sobre claro. Cada par cumple los mismos mínimos de contraste (tests/project/palette-contrast.test.ts).
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --color-surface: #0b1220;
+    --color-surface-alt: #111b30;
+    --color-surface-strong: #1e293b;
+    --color-ink: #e2e8f0;
+    --color-ink-muted: #a9b6c9;
+    --color-primary: #93c5fd;
+    --color-primary-hover: #dbeafe;
+    --color-primary-strong: #bfdbfe;
+    --color-primary-deep: #9dbcf0;
+    --color-line: #1e3a8a;
+    --color-control-border: #8294ae;
+    --color-danger: #fca5a5;
+    --color-success: #86efac;
+    --color-warning: #fcd34d;
+  }
+}
+
 @layer base {
   html {
     font-size: 100%;
@@ -95,5 +120,52 @@
   .skip-link:focus {
     transform: translateY(0);
     outline-color: var(--color-primary);
+  }
+}
+
+/*
+ * Impresión: solo contenido. Se ocultan la barra, el pie, los botones, los formularios y los enlaces de orden
+ * (la lista y su total sí se imprimen), en blanco y negro y sin partir un deseo entre dos hojas.
+ */
+@media print {
+  body > header,
+  body > footer,
+  .skip-link,
+  nav,
+  form,
+  button,
+  dialog {
+    display: none !important;
+  }
+
+  :root {
+    color-scheme: light;
+  }
+
+  body,
+  main {
+    background: white !important;
+    color: black !important;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  main * {
+    color: black !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  article {
+    break-inside: avoid;
+  }
+
+  /* La tienda se imprime con su enlace completo, porque en papel no se puede hacer clic. */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    word-break: break-all;
   }
 }

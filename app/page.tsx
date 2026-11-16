@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
+import { SITE_DESCRIPTION, SITE_NAME, pageMetadata } from "@/shared/seo";
 import { HomeSession } from "./_components/home-session";
+import { WebApplicationJsonLd } from "./_components/json-ld";
 
 interface Area {
   title: string;
@@ -12,18 +15,28 @@ const AREAS: Area[] = [
     title: "Deseos",
     text: "Guardar productos con el enlace de la tienda y el precio, editarlos, priorizarlos y marcarlos como comprados.",
   },
-  { title: "Listas", text: "Organizar los deseos por categorías, ver el total y fijar una meta de ahorro." },
+  {
+    title: "Total y prioridades",
+    text: "Ve cuánto suma lo pendiente y ordena por prioridad o precio.",
+  },
 ];
+
+export const metadata: Metadata = pageMetadata({
+  title: SITE_NAME,
+  description: SITE_DESCRIPTION,
+  path: "/",
+});
 
 export default function HomePage() {
   return (
     <article>
+      <WebApplicationJsonLd />
       <header className="rounded-lg bg-primary-strong p-6 text-surface md:p-10">
         <p className="text-sm font-semibold uppercase tracking-wide">Proyecto final de semestre</p>
         <h1 className="mt-2 text-3xl font-bold md:text-4xl">Lista de deseos</h1>
         <p className="mt-4 max-w-[70ch] text-lg">
-          Guarda lo que quieres comprar con el enlace de la tienda y el precio, organízalo en listas y mira cuánto suma
-          todo.
+          Guarda lo que quieres comprar con el enlace de la tienda y el precio, ordénalo por prioridad o precio y mira
+          cuánto suma lo pendiente.
         </p>
       </header>
 

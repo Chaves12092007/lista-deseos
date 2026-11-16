@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { pageMetadata } from "@/shared/seo";
 import { MyWishes } from "../_components/my-wishes";
 
 export const metadata: Metadata = {
-  title: "Mi lista",
+  ...pageMetadata({
+    title: "Mi lista",
+    description: "Tus deseos con su tienda, precio y prioridad, y cuánto suma lo pendiente.",
+    path: "/mi-lista",
+  }),
+  // Página privada: no se indexa (tampoco está en el sitemap).
+  robots: { index: false, follow: false },
 };
 
 export default function MyListPage({ searchParams }: PageProps<"/mi-lista">) {
