@@ -26,6 +26,17 @@ npm run check             # debe quedar en verde
 npm run emulators         # Auth en 9099, Firestore en 8080, interfaz en http://127.0.0.1:4000
 ```
 
+### Datos de ejemplo (seed)
+
+Para ver la app con contenido sin escribirlo a mano:
+
+1. Deja corriendo `npm run emulators` en una terminal.
+2. En otra terminal: `npm run seed`.
+
+Crea (o reutiliza) la cuenta `demo@lista-deseos.test` con contraseña `demo-12345` y 5 deseos de ejemplo con distintas prioridades y precios, uno de ellos ya comprado. Es seguro repetirlo: no duplica los deseos (los reconoce por el nombre) y solo repone los que falten.
+
+El seed se niega a correr (sale con código 1 y explica por qué) si no hay emulador de Auth y de Firestore en esta máquina o si `FIREBASE_PROJECT_ID` no empieza con `demo-`, así que nunca toca Firebase real. Lee las variables de tu archivo de entorno local (paso 2) y usa los servicios de la app, no escribe directo en Firestore. Si dice «¿Está corriendo npm run emulators?», prende los emuladores y vuelve a intentarlo.
+
 ## 4. Claude Code
 
 Ábrelo **siempre en la raíz del repo** (`cd ~/proyectos/lista-deseos && claude`). Antes de trabajar:
